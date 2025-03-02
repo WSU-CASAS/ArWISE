@@ -45,7 +45,7 @@ You can add new features in the `compute_features` method. See the existing feat
 Datasets that can be used as input to the `generate-dataset.py` script are available at the Dryad repository [https://doi.org/10.5061/dryad.jdfn2z3nm](https://doi.org/10.5061/dryad.jdfn2z3nm). These datasets were generated using the following command:
 
 ```
-python generate-features.py --inputfile input.csv --outputfile output.csv --backfill 30 --windowsize 60 --stepsize 1 --timewindow
+python generate-features.py --inputfile input.csv --outputfile output.csv --backfill 300 --windowsize 60 --stepsize 1 --timewindow
 ```
 
 Datasets that can be used as input to the `generate-features.py` script are available at [https://github.com/WSU-CASAS/smartwatch-data](https://github.com/WSU-CASAS/smartwatch-data). Scroll to the bottom of the README for pointers to actual data.
