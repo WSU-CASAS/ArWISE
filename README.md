@@ -2,11 +2,13 @@
 
 Activity recognition from in-the-WIld SmartwatchEs
 
-This repository contains the code used to process the associated ArWISE dataset available at [https://doi.org/10.5061/dryad.jdfn2z3nm](https://doi.org/10.5061/dryad.jdfn2z3nm).  The `generate-dataset.py` script can be used to generate training and testing sets from the Dryad datasets suitable for machine learning methods. The `generate-features.py` script was used to generate the datasets and is included here to understand the details of how the datasets were generated.
+This repository contains the code used to process the associated ArWISE dataset available at [https://doi.org/10.5061/dryad.jdfn2z3nm](https://doi.org/10.5061/dryad.jdfn2z3nm). The `generate-dataset.py` script can be used to generate training and testing sets from the Dryad datasets suitable for machine learning methods. The `generate-features.py` script was used to generate the datasets and is included here to understand the details of how the datasets were generated.
 
-For visualizing data and results, the `visualize.py` script plots a pca and umap of a dataset stored in data.csv. The `confusion_wheel.py` script creates a png file visualizing a confusion wheel based on values provided in confusion_matrix.csv.
+Small sample data is available in the `data` directory.
 
-To predict activity labels, a set of alternative models are provided. These include a 1D CNN that processes time series data, a DNN, a contrastive pretrainer, a masked autoencoder pretrainer, a random forest, and a ft-transformer-augmented random forest. These are created using scripts `cnn.py`, `dnn_train.py` and `dnn_test.py`, `cl_pre.py`, `cl_train.py`, and `cl_test.py`, `mae_pre.py`, `mae_train.py`, and `mae_test.py`, `rf.py`, and `ft.py`.
+For visualizing data and results, the `visualize.py` script plots a pca and umap of a dataset. The `confusion_wheel.py` script creates a png file visualizing a confusion wheel based on values provided in confusion matrix CSV file. See details below.
+
+To predict activity labels, a set of alternative models are provided. These include a 1D CNN that processes time series data, a DNN, a contrastive pretrainer, a masked autoencoder pretrainer, a random forest, and a ft-transformer-augmented random forest. These are created using scripts `cnn.py`; `dnn_train.py` and `dnn_test.py`; `cl_pre.py`, `cl_train.py` and `cl_test.py`; `mae_pre.py`, `mae_train.py` and `mae_test.py`; `rf.py`; and `ft.py`. See details below.
 
 Library used to build machine learning models for detecting general human activity classes from smart watch data.
 
@@ -46,10 +48,10 @@ You can add new features in the `compute_features` method. See the existing feat
 
 ## Visualize Data
 
-The `visualize.py` script creates a 2D PCA plot and 2D UMAP plot of the data contains in the file `data.csv.` The resulting plots are stored in files `pca.png` and `umap.png.` The first field in data.csv is assumped to be a time stamp (yyyy-mm-dd hh:mm:ss.ffffff) and the last field is a string activity label. The remaining fields represent the feature vector that is visualized. The colors in the plots represent the value of the activity for the corresponding data point.
+The `visualize.py` script creates a 2D PCA plot and 2D UMAP plot of the data in the given CSV data file. The resulting plots are stored in files `<datafile>-pca.png` and `<datafile>-umap.png.` The first field in each line of the CSV file is assumed to be a time stamp (yyyy-mm-dd hh:mm:ss.ffffff) and the last field is a string activity label. The remaining fields represent the feature vector that is visualized. The colors in the plots represent the value of the activity for the corresponding data point.
 
 ```
-python visualize.py
+python visualize.py <datafile.csv>
 ```
 
 The `confusion_wheel.py` script generates a confusion wheel plot to visualize a confusion matrix set of classification results, stored in file `confusion_matrix.csv.` The whell is stored in file `cw.png.`
