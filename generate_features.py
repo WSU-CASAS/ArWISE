@@ -1,4 +1,4 @@
-# generate-features.py --inputfile <input_file> --outputfile <output_file>
+# generate_features.py --inputfile <input_file> --outputfile <output_file>
 #   [--backfill 0] [--downsample None] [--timewindow] [--raw]
 #   [--windowsize 300] [--stepsize 300] [--mindata 1]
 #

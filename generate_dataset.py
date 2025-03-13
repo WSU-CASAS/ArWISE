@@ -1,9 +1,9 @@
-# generate-dataset.py --inputfile <input_file> [--testsize 0.2] [--windowsize 300] [--seed N]
+# generate_dataset.py --inputfile <input_file> [--testsize 0.2] [--windowsize 300] [--seed N]
 #
 # The input file is expected to be in the format that is output by the above generate-features.py
 # script, using the --timewindow option on that script; namely, each line begins with a stamp_begin
 # and stamp_end timestamp, followed by the feature values, followed by the activity_label (str or None).
-# The script generates two files: <input_file>-train.csv and <input_file>-test.csv, in the same format
+# The script generates two files: <input_file>_train.csv and <input_file>_test.csv, in the same format
 # as the input, except only one timestamp 'stamp' is given, which is the end of the window. The test
 # file contains labeled examples that cover approximately `--testsize` (default=0.2) of the time span
 # of the input file, and the train file contains the rest of the examples that do not overlap with the
@@ -138,8 +138,8 @@ if __name__ == "__main__":
     # Write train and test sets to CSV files
     if (not train_df.empty) and (not test_df.empty):
         base_file = os.path.splitext(args.input_file)[0]
-        train_file = base_file + '-train.csv'
-        test_file = base_file + '-test.csv'
+        train_file = base_file + '_train.csv'
+        test_file = base_file + '_test.csv'
         train_df.to_csv(train_file, index=False, date_format='%Y-%m-%d %H:%M:%S.%f')
         test_df.to_csv(test_file, index=False, date_format='%Y-%m-%d %H:%M:%S.%f')
     else:
