@@ -2,7 +2,7 @@
 
 Activity recognition from in-the-WIld SmartwatchEs
 
-This repository contains the code used to process the associated ArWISE dataset available at [https://doi.org/10.5061/dryad.jdfn2z3nm](https://doi.org/10.5061/dryad.jdfn2z3nm). The `generate-dataset.py` script can be used to generate training and testing sets from the Dryad datasets suitable for machine learning methods. The `generate-features.py` script was used to generate the datasets and is included here to understand the details of how the datasets were generated.
+This repository contains the code used to process the associated ArWISE dataset available at [https://doi.org/10.5061/dryad.jdfn2z3nm](https://doi.org/10.5061/dryad.jdfn2z3nm). The `generate_dataset.py` script can be used to generate training and testing sets from the Dryad datasets suitable for machine learning methods. The `generate_features.py` script was used to generate the datasets and is included here to understand the details of how the datasets were generated.
 
 Small sample data is available in the `data` directory.
 
@@ -14,25 +14,25 @@ Library used to build machine learning models for detecting general human activi
 
 ## Generate Dataset
 
-The `generate-data.py` script generates training and testing sets suitable for machine learning methods.
+The `generate_dataset.py` script generates training and testing sets suitable for machine learning methods.
 
 ```
-python generate-dataset.py --inputfile <input_file.csv> [--testsize 0.2] [--windowsize 300] [--seed N]
+python generate_dataset.py --inputfile <input_file.csv> [--testsize 0.2] [--windowsize 300] [--seed N]
 ```
 
-The input file is expected to be in the format that is output by the below `generate-features.py` script with the `--timewindow` option given; namely, each line begins with a `stamp_begin` and `stamp_end` timestamp, followed by the feature values, followed by the `activity_label` (str or None). The script generates two files: `<input_file>-train.csv` and `<input_file>-test.csv`, in the same format as the input, except only one timestamp `stamp` is given, which is the end of the window. The test file contains labeled examples that cover approximately `--testsize` (default=0.2) of the time span of the input file, and the train file contains the rest of the examples that do not overlap with the test examples. The script selects examples for the test set by randomly selecting an unused example and collecting all the nearby unused examples within a time window of size `--windowsize` seconds (default=300). The random selection is controlled by the `--seed` if given; otherwise, the seed is randomly chosen.
+The input file is expected to be in the format that is output by the below `generate_features.py` script with the `--timewindow` option given; namely, each line begins with a `stamp_begin` and `stamp_end` timestamp, followed by the feature values, followed by the `activity_label` (str or None). The script generates two files: `<input_file>_train.csv` and `<input_file>_test.csv`, in the same format as the input, except only one timestamp `stamp` is given, which is the end of the window. The test file contains labeled examples that cover approximately `--testsize` (default=0.2) of the time span of the input file, and the train file contains the rest of the examples that do not overlap with the test examples. The script selects examples for the test set by randomly selecting an unused example and collecting all the nearby unused examples within a time window of size `--windowsize` seconds (default=300). The random selection is controlled by the `--seed` if given; otherwise, the seed is randomly chosen.
 
 ## Generate Features
 
-The `generate-features.py` script generates feature-based datasets given timestamped sensor data from smart devices.
+The `generate_features.py` script generates feature-based datasets given timestamped sensor data from smart devices.
 
 ```
-python generate-features.py --inputfile <input_file> --outputfile <output_file> [--backfill 0] [--downsample None] [--raw] [--windowsize 300] [--stepsize 300] [--mindata 1] [--timewindow]
+python generate_features.py --inputfile <input_file> --outputfile <output_file> [--backfill 0] [--downsample None] [--raw] [--windowsize 300] [--stepsize 300] [--mindata 1] [--timewindow]
 ```
 
 The input file is expected to be a CSV file in the CASAS format. For details on this format, see [https://github.com/WSU-CASAS/smartwatch-data](https://github.com/WSU-CASAS/smartwatch-data). Scroll to the bottom of the README for pointers to actual data.
 
-Generated features and the activity label are written to the given output file. To choose the activity label, the script first checks for a non-Null user_activity_label` value at the end of the window. If found, then uses that value. Otherwise, the code checks for a non-Null `activity_label` value at the end of the window. If found, then uses that value. If neither yields a non-Null value, then the activity label is set to None.
+Generated features and the activity label are written to the given output file. To choose the activity label, the script first checks for a non-Null `user_activity_label` value at the end of the window. If found, then uses that value. Otherwise, the code checks for a non-Null `activity_label` value at the end of the window. If found, then uses that value. If neither yields a non-Null value, then the activity label is set to None.
 
 The `--backfill` option specifies the number of seconds into the past to copy a `user_activity_label`. The default of 0 means no backfill.
 
@@ -48,16 +48,16 @@ You can add new features in the `compute_features` method. See the existing feat
 
 ## Visualize Data
 
-The `visualize.py` script creates a 2D PCA plot and 2D UMAP plot of the data in the given CSV data file. The resulting plots are stored in files `<datafile>-pca.png` and `<datafile>-umap.png.` The first field in each line of the CSV file is assumed to be a time stamp (yyyy-mm-dd hh:mm:ss.ffffff) and the last field is a string activity label. The remaining fields represent the feature vector that is visualized. The colors in the plots represent the value of the activity for the corresponding data point.
+The `visualize.py` script creates a 2D PCA plot and 2D UMAP plot of the data in the given CSV data file. The resulting plots are stored in files `<datafile>_pca.png` and `<datafile>_umap.png`. The first field in each line of the CSV file is assumed to be a time stamp (yyyy-mm-dd hh:mm:ss.ffffff) and the last field is a string activity label. The remaining fields represent the feature vector that is visualized. The colors in the plots represent the value of the activity for the corresponding data point. See `data/data.csv` for a sample input file.
 
 ```
 python visualize.py <datafile.csv>
 ```
 
-The `confusion_wheel.py` script generates a confusion wheel plot to visualize a confusion matrix set of classification results, stored in file `confusion_matrix.csv.` The whell is stored in file `cw.png.`
+The `confusion_wheel.py` script generates a confusion wheel plot to visualize a confusion matrix set of classification results, stored in file the given CSV file. The wheel is stored in file `<confusion_matrix>_wheel.png`. See `data/confusion_matrix.csv` for a sample input file.
 
 ```
-python confusion_wheel.py
+python confusion_wheel.py <confusion_matrix.csv>
 ```
 
 ## Models
