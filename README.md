@@ -62,12 +62,28 @@ python confusion_wheel.py <confusion_matrix.csv>
 
 ## Models
 
+### Preliminary Steps
+
+Before training or testing the various models below, some preliminary steps must be taken.
+
+1. If you want to ignore some activity labels, you can create an `unwanted_activities.csv` file. This file has a single header `activity_label`, and each line has an activity label that will be ignored, i.e., any example with this activity label will be removed from the data before training or testing begin. An example is provided in the `utilities` directory, but you can modify it or create your own. This file is an optional input to the model scripts below. If not provided, then no activities are removed.
+
+2. If you want to map some activity labels to others, or to general categories, you can create an `activity_mapping.csv` file. This file has the header `original,mapped`, and each line has the original activity label followed by the activity label it should be mapped to. This mapping is applied to all data before training or testing begin. An example is provided in the `utilities` directory, but you can modify it or create your own. This file is an optional input to the model scripts below. If not provided, then no mapping is performed.
+
+3. The script `utilities/label_encoder.py <activity_mapping.csv>` generates an encoder that maps activity label strings to integers. The `<activity_mapping.csv>` argument is the activity mapping CSV file from #2 above. The encoder is written to the file `label_encoder.pkl`. This file can be provided as input to the model scripts. If not provided, then the model scripts will generate a label encoder based on the activity mapping or dataset provided to the model script. Generating one label encoder for all the data, and passing this encoder to all training and testing model scripts, is preferred over having each script generate its own encoder. An example is provided in the `utilities` directory, which was generated based on the `activity_mapping.csv` file there.
+
+4. The script `utilities/scaler.py <data.csv>` trains a normalization scaler on the given dataset and writes it to the file `scaler.pkl`. This file can be provided as input to the model scripts. If not provided, then the model scripts will train a scaler using the dataset provided to the model script. Training one scaler on all the data, and passing this scaler to all training and testing model scripts, is preferred over generating scalars for each script. An example is provided in the `utilities` directory, which was trained on the ArWISE data.
+
+## Utilities
+
+Several utilities are provided. These include a `scaler.py` script that trains a normalization scaler on all available data (this is used by most of the models). These also includes `activity_mapping.csv`, that contains a list mapping labels found in the original data to the activity categories learned by the models, `unwanted_activities.csv` that filters out unwanted activity categories, `scaler.pkl` that is a normalization model trained on the ArWISE data, and `label_encoder.pkl` that is a model for encoding ArWISE string activity labels to integer representations.
+
 ## 1D CNN
 
-The `cnn.py` script trains and tests a 1D CNN human activity recognizer. This model processes time series data. The code assumes each data point is described by 8 features at 100 consecutive time points, the data have been separated into train and test files, and the files are stored in directory `cnndata`.
+The `cnn.py` script trains and tests a 1D CNN human activity recognizer. This model processes time series data. The code assumes each data point is described by 8 features at 100 consecutive time points, and the data have been separated into train and test files, and the files are stored in directory `cnndata`.
 
 ```
-python cnn.py
+python cnn.py <train.csv> <test.csv>
 ```
 
 ## DNN
@@ -156,10 +172,6 @@ The `rf_ft.py` script script trains and evaluates a random forest activity recog
 ```
 python rf_ft.py
 ```
-
-## Utilities
-
-Several utilities are provided. These include a `scaler.py` script that trains a normalization scaler on all available data (this is used by most of the models). These also includes `activity_mapping.csv`, that contains a list mapping labels found in the original data to the activity categories learned by the models, `unwanted_activities.csv` that filters out unwanted activity categories, `scaler.pkl` that is a normalization model trained on the ArWISE data, and `label_encoder.pkl` that is a model for encoding ArWISE string activity labels to integer representations.
 
 ## Datasets
 
