@@ -75,19 +75,7 @@ Before training or testing the various models below, some preliminary steps must
 4. The script `utilities/scaler.py <data.csv>` trains a standard scaler on the given dataset and writes it to the file `scaler.pkl`. The standard scalar scales
    each column independently by removing the mean and scaling to unit variance. This file can be provided as input to the model scripts, in which case the same feature columns must be used in all datasets. If not provided, then the model scripts will train a scaler using the dataset provided to the model script. Training one scaler on all the data, and passing this scaler to all training and testing model scripts, is preferred over generating scalars for each script. An example is provided in the `utilities` directory, which was trained on the ArWISE data.
 
-## Utilities
-
-Several utilities are provided. These include a `scaler.py` script that trains a normalization scaler on all available data (this is used by most of the models). These also includes `activity_mapping.csv`, that contains a list mapping labels found in the original data to the activity categories learned by the models, `unwanted_activities.csv` that filters out unwanted activity categories, `scaler.pkl` that is a normalization model trained on the ArWISE data, and `label_encoder.pkl` that is a model for encoding ArWISE string activity labels to integer representations.
-
-## 1D CNN
-
-The `cnn.py` script trains and tests a 1D CNN human activity recognizer. This model processes time series data. The code assumes each data point is described by 8 features at 100 consecutive time points, and the data have been separated into train and test files, and the files are stored in directory `cnndata`.
-
-```
-python cnn.py <train.csv> <test.csv>
-```
-
-## DNN
+### DNN
 
 The `dnn_train.py` script trains deep neural network human activity recognizer. This model processes tabular features describing the data points. The code assumes the training data are available in file `data/train.csv`. The `--augment` option specifies that synthetic data points be added to the training data. The number of synthetic points for each class type is inversely proportional to the relative class size. This option maybe to used to address potential class imbalance.
 
@@ -101,7 +89,7 @@ The `dnn_test.py` script tests the deep neural network human activity recognizer
 python dnn_test.py
 ```
 
-## DNN with Contrastive Pretraining
+### DNN with Contrastive Pretraining
 
 The scripts `cl_pretrain.py`, `cl_train.py`, and `cl_test.py` train and evaluate a deep network for activity recognition
 that is boosted by contrastive pretraining.
@@ -124,7 +112,7 @@ The `cl_test.py` script tests an activity classification model that was trained 
 python cl_test.py
 ```
 
-## DNN with Masked Autoencoder Pretraining
+### DNN with Masked Autoencoder Pretraining
 
 The scripts `mae_pretrain.py`, `mae_train.py`, and `mae_test.py` train and evaluate a deep network for activity recognition
 that is boosted by contrastive pretraining.
@@ -147,11 +135,11 @@ The `mae_test.py` script tests an activity classification model that was trained
 python mae_test.py
 ```
 
-## Random Forest
+### Random Forest
 
 The `random_forest.py` script trains and evaluates a random forest activity recognition model. The code assumes the tabular training data are available in `data/train.csv` and test data are available in `data/test.csv`. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
 
-## FT-Transformer Augmented Random Forest
+### FT-Transformer Augmented Random Forest
 
 The scripts `ft_train.py`, `ft_embed.py`, and `rf_ft.py` train and evaluate an activity recognition model based on
 random forest with features that are augmented using FT-Transformer embeddings.
@@ -174,15 +162,25 @@ The `rf_ft.py` script script trains and evaluates a random forest activity recog
 python rf_ft.py
 ```
 
+### 1D CNN
+
+The `cnn.py` script trains and tests a 1D CNN human activity recognizer. Unlike the above models, the CNN uses the raw time series data. The code assumes each data point is described by `NUM_FEATURES` features at `WINDOW_SIZE` consecutive time points. So each row of data contains `NUM_FEATURES*WINDOW_SIZE+2` columns. `NUM_FEATURES` and `WINDOW_SIZE` are set as constants in the script code. Sample raw data files are available in the `cnndata` directory. Note that the optional `--scaler` input must be created based on these raw features, rather than the more general features used by the above models.
+
+```
+python cnn.py --datadir <datadir> --modelfile <model_file> [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
+```
+
+The program reads in all CSV (*.csv) files from the given `<data_dir>` and saves the trained model in Keras format to `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data.
+
 ## Datasets
 
-Datasets that can be used as input to the `generate-dataset.py` script are available at the Dryad repository [https://doi.org/10.5061/dryad.jdfn2z3nm](https://doi.org/10.5061/dryad.jdfn2z3nm). These datasets were generated using the following command:
+Larger datasets that can be used as input to the `generate-dataset.py` script are available at the Dryad repository [https://doi.org/10.5061/dryad.jdfn2z3nm](https://doi.org/10.5061/dryad.jdfn2z3nm). These datasets were generated using the following command:
 
 ```
 python generate-features.py --inputfile input.csv --outputfile output.csv --backfill 300 --windowsize 60 --stepsize 1 --timewindow
 ```
 
-Datasets that can be used as input to the `generate-features.py` script are available at [https://github.com/WSU-CASAS/smartwatch-data](https://github.com/WSU-CASAS/smartwatch-data). Scroll to the bottom of the README for pointers to actual data.
+Larger datasets that can be used as input to the `generate-features.py` script are available at [https://github.com/WSU-CASAS/smartwatch-data](https://github.com/WSU-CASAS/smartwatch-data). Scroll to the bottom of the README for pointers to actual data.
 
 Smaller datasets, including `train.csv`, `test.csv`, and `data.csv`, are included with this distribution to facilitate testing the scripts.
 
