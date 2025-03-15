@@ -66,34 +66,38 @@ python confusion_wheel.py <confusion_matrix.csv>
 
 Before training or testing the various models below, some preliminary steps must be taken.
 
-1. If you want to ignore some activity labels, you can create an `unwanted_activities.csv` file. This file has a single header `activity_label`, and each line has an activity label that will be ignored, i.e., any example with this activity label will be removed from the data before training or testing begin. An example is provided in the `data` directory, but you can modify it or create your own. This file is an optional input to the model scripts below. If not provided, then no activities are removed.
+1. If you want to ignore some activity labels, you can create an `unwanted_activities.csv` file. This file has a single header `activity_label`, and each line has an activity label that will be ignored, i.e., any example with this activity label will be removed from the data before training or testing begin. An example is provided in the `data/unwanted_activities.csv` file, but you can modify it or create your own. This file is an optional input to the model scripts below. If not provided, then no activities are removed.
 
-2. If you want to map some activity labels to others, or to general categories, you can create an `activity_mapping.csv` file. This file has the header `original,mapped`, and each line has the original activity label followed by the activity label it should be mapped to. This mapping is applied to all data before training or testing begin. An example is provided in the `data` directory, but you can modify it or create your own. This file is an optional input to the model scripts below. If not provided, then no mapping is performed.
+2. If you want to map some activity labels to others, or to general categories, you can create an `activity_mapping.csv` file. This file has the header `original,mapped`, and each line has the original activity label followed by the activity label it should be mapped to. This mapping is applied to all data before training or testing begin. An example is provided in the `data/activity_mapping.csv` file, but you can modify it or create your own. This file is an optional input to the model scripts below. If not provided, then no mapping is performed.
 
-3. The model scripts use a label encoder to convert string activity labels to integers. Each script has an `--encoder` argument that you can use to pass in a label encoder PKL file. This file can be created using the `create_encoder_from_mapping` function in `utilities.py` by passing in the activity mapping CSV file name. The label encoder can also be created from a dataframe using the `create_encoder_from_data` function in `utilities.py`. These functions also allow the encoder to be written to a given file name in PKL format. This file can be provided as input to the model scripts. If not provided, then the model scripts will generate a label encoder based on the activity mapping or dataset provided to the model script. Generating one label encoder for all the data, and passing this encoder to all training and testing model scripts, is preferred over having each script generate its own encoder. An example is provided in the `data` directory, which was generated based on the `activity_mapping.csv` file there.
+3. The model scripts use a label encoder to convert string activity labels to integers. Each script has an `--encoder` argument that can be used to pass in a label encoder PKL file. This file can be created using the `create_encoder.py` script. This file can be provided as input to the model scripts, in which case the same activity labels must be used in all datasets. If not provided, then the model scripts will generate a label encoder based on the activity mapping or dataset provided to the model script. Generating one label encoder for all the data, and passing this encoder to all training and testing model scripts, is preferred over having each script generate its own encoder. An example is provided in the `data/label_encoder.pkl` file, which was generated based on the `activity_mapping.csv` file there.
 
-4. The model scripts use a standard scaler to scale the data in each column independently by removing the mean and scaling to unit variance. Each script has a `--scaler` argument that you can use to pass in a scaler PKL file. This file can be created using the `create_scaler_from_data` function in `utilities.py` by passing in a dataframe. This function also allows the scaler to be written to a given file name in PKL format. This file can be provided as input to the model scripts, in which case the same feature columns must be used in all datasets. If not provided, then the model scripts will train a scaler using the dataset provided to the model script. Training one scaler on all the data, and passing this scaler to all training and testing model scripts, is preferred over generating scalers for each script. An example is provided in the `data` directory, which was trained on the ArWISE data.
+4. The model scripts use a standard scaler to scale the data in each column independently by removing the mean and scaling to unit variance. Each script has a `--scaler` argument that can be used to pass in a scaler PKL file. This file can be created using the `create_scaler.py` script. This file can be provided as input to the model scripts, in which case the same feature columns must be used in all datasets. If not provided, then the model scripts will train a scaler using the dataset provided to the model script. Training one scaler on all the data, and passing this scaler to all training and testing model scripts, is preferred over generating scalers for each script. An example is provided in the `data/scaler.pkl` file, which was trained on the ArWISE data.
 
-Pretrained models for each of the following model types are stored in the `models` directory.
+Pretrained models for each of the following model types are available in the `models` directory.
 
 ### DNN
+
+#### DNN Training
 
 The `dnn_train.py` script trains deep neural network human activity recognizer. This model processes tabular features describing the data points.
 ```
 python dnn_train.py --datafile <data_file> --modelfile <model_file> [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>] [--augment]
 ```
 
-The program reads training data from the given `<data_file>` and saves the trained model in Keras format to `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data.
+The program reads training data from the given `<data_file>` and saves the trained model in Keras format to `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data. A sample data file is available in `data/train.csv`, and a previously pretrained model is available in `models/dnn_model.keras`.
 
 The `--augment` option specifies that synthetic data points be added to the training data. The number of synthetic points for each class type is inversely proportional to the relative class size. This option maybe to used to address potential class imbalance.
 
------
+#### DNN Testing
 
-The `dnn_test.py` script tests the deep neural network human activity recognizer. This model processes tabular features describing the data points. The code assumes the model has been trained and is available in `models/dnn_model.keras`. The code also assumes test data are available in file `data/test.csv`. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
+The `dnn_test.py` script tests the deep neural network human activity recognizer given in `<model_file>` on data given in `<data_file>`. A previously pretrained DNN model is available in file `models/dnn_model.keras`. A sample test dataset is available in file `data/test.csv`. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
 
 ```
-python dnn_test.py
+python dnn_test.py --datafile <data_file> --modelfile <model_file> [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
 ```
+
+While the label encoded and scaler can be computed from the data and the optional activity mapping and unwanted activities, the best approach is to generate an encoder and scaler using the `create_encoder.py` and `create_scaler.py` scripts and use the same encoder and scaler for both `dnn_train.py` and `dnn_test.py`.
 
 ### DNN with Contrastive Pretraining
 
