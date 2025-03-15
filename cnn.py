@@ -1,5 +1,5 @@
 """
-   cnn.py --datadir <datadir> --modelfile <model_file>
+   cnn.py --datadir <data_dir> --modelfile <model_file>
           [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>]
           [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
           

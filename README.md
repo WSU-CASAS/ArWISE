@@ -74,6 +74,8 @@ Before training or testing the various models below, some preliminary steps must
 
 4. The model scripts use a standard scaler to scale the data in each column independently by removing the mean and scaling to unit variance. Each script has a `--scaler` argument that you can use to pass in a scaler PKL file. This file can be created using the `create_scaler_from_data` function in `utilities.py` by passing in a dataframe. This function also allows the scaler to be written to a given file name in PKL format. This file can be provided as input to the model scripts, in which case the same feature columns must be used in all datasets. If not provided, then the model scripts will train a scaler using the dataset provided to the model script. Training one scaler on all the data, and passing this scaler to all training and testing model scripts, is preferred over generating scalers for each script. An example is provided in the `data` directory, which was trained on the ArWISE data.
 
+Pretrained models for each of the following model types are stored in the `models` directory.
+
 ### DNN
 
 The `dnn_train.py` script trains deep neural network human activity recognizer. This model processes tabular features describing the data points. The code assumes the training data are available in file `data/train.csv`. The `--augment` option specifies that synthetic data points be added to the training data. The number of synthetic points for each class type is inversely proportional to the relative class size. This option maybe to used to address potential class imbalance.
@@ -166,7 +168,7 @@ python rf_ft.py
 The `cnn.py` script trains and tests a 1D CNN human activity recognizer. Unlike the above models, the CNN uses the raw time series data. The code assumes each data point is described by `NUM_FEATURES` features at `WINDOW_SIZE` consecutive time points. So each row of data contains `NUM_FEATURES*WINDOW_SIZE+2` columns. `NUM_FEATURES` and `WINDOW_SIZE` are set as constants in the script code. Sample raw data files are available in the `cnndata` directory. Note that the optional `--scaler` input must be created based on these raw features, rather than the more general features used by the above models.
 
 ```
-python cnn.py --datadir <datadir> --modelfile <model_file> [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
+python cnn.py --datadir <data_dir> --modelfile <model_file> [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
 ```
 
 The program reads in all CSV (*.csv) files from the given `<data_dir>` and saves the trained model in Keras format to `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data.
