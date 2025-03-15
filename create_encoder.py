@@ -27,7 +27,7 @@ def parse_arguments():
 if __name__ == "__main__":
    args = parse_arguments()
    if args.data_file:
-      df = pd.read_csv(args.data_dir)
+      df = pd.read_csv(args.data_file)
    activity_mapping = None
    if args.activity_mapping_file:
       activity_mapping = load_activity_mapping(args.activity_mapping_file)
