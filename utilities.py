@@ -11,11 +11,16 @@ from sklearn.preprocessing import StandardScaler, LabelEncoder
 import joblib
 
 def load_activity_mapping(file_path="activity_mapping.csv"):
-    """Load a file containing mappings from the original activity labels to the activity categories being modeled."""
+    """
+    Load a file containing mappings from the original activity labels to the
+    activity categories being modeled.
+    """
     return pd.read_csv(file_path).set_index("original")["mapped"].to_dict()
 
 def load_unwanted_activities(file_path="unwanted_activities.csv"):
-    """Load a file containing names of activity categories to ignore (drop)."""
+    """
+    Load a file containing names of activity categories to ignore (drop).
+    """
     return set(pd.read_csv(file_path)["activity_label"])
 
 def create_scaler_from_data(df, output_file=None):
@@ -55,3 +60,15 @@ def create_encoder_from_mapping(act_map_file, output_file=None):
    if output_file:
       joblib.dump(label_encoder, output_file)
    return label_encoder
+
+def map_and_filter_data(df, activity_mapping=None, unwanted_activities=None):
+    """
+    Remove rows with no activity label, or a label in unwanted activities.
+    Then, map activity labels according to the given mapping.
+    """
+    df = df.dropna(subset=["activity_label"])
+    if unwanted_activities:
+        df = df[~df["activity_label"].isin(unwanted_activities)]
+    if activity_mapping:
+        df["activity_label"] = df["activity_label"].replace(activity_mapping)
+    return df

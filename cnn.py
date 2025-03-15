@@ -33,7 +33,7 @@ import joblib
 import argparse
 
 from utilities import create_encoder_from_data, create_scaler_from_data
-from utilities import load_activity_mapping, load_unwanted_activities
+from utilities import load_activity_mapping, load_unwanted_activities, map_and_filter_data
 
 NUM_FEATURES = 8  # Number of features per time point
 WINDOW_SIZE = 100 # Consecutive time points concatenated to form features
@@ -50,16 +50,6 @@ def load_data(data_dir):
         if file.endswith(".csv"):
             new_df = pd.read_csv(file_path)
             df = pd.concat([df, new_df], ignore_index=True)
-    return df
-
-def map_and_filter_data(df, activity_mapping, unwanted_activities):
-    """Remove rows with no activity label, or a label in unwanted activities.
-    Then, map activity labels according to the given mapping."""
-    df = df.dropna(subset=["activity_label"])
-    if unwanted_activities:
-        df = df[~df["activity_label"].isin(unwanted_activities)]
-    if activity_mapping:
-        df["activity_label"] = df["activity_label"].replace(activity_mapping)
     return df
 
 # Build train and test data.
@@ -116,8 +106,8 @@ def parse_arguments():
 if __name__ == "__main__":
     args = parse_arguments()
     # Get data
-    data_df = load_data(args.data_dir)
-    # Build label_encoder, activity mapping, and unwanted activities (if provided)
+    df = load_data(args.data_dir)
+    # Build label_encoder, scalar, activity mapping, and unwanted activities (if provided)
     label_encoder = None
     if args.label_encoder_file:
         label_encoder = joblib.load(args.label_encoder_file)
@@ -130,14 +120,14 @@ if __name__ == "__main__":
     unwanted_activities = None
     if args.unwanted_activities_file:
         unwanted_activities = load_unwanted_activities(args.unwanted_activities_file)
-    data_df = map_and_filter_data(data_df, activity_mapping, unwanted_activities)
+    df = map_and_filter_data(df, activity_mapping, unwanted_activities)
     if not label_encoder:
-        label_encoder = create_encoder_from_data(data_df)
+        label_encoder = create_encoder_from_data(df)
     if not scaler:
-        scaler = create_scaler_from_data(data_df)
+        scaler = create_scaler_from_data(df)
     # Build train and test sets
     num_classes = len(label_encoder.classes_)
-    X_train, X_test, y_train, y_test = process_data(data_df, label_encoder, scaler)
+    X_train, X_test, y_train, y_test = process_data(df, label_encoder, scaler)
     # Build, train and save model
     input_shape = (X_train.shape[1], X_train.shape[2])
     model = build_model(input_shape, num_classes)

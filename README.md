@@ -78,11 +78,16 @@ Pretrained models for each of the following model types are stored in the `model
 
 ### DNN
 
-The `dnn_train.py` script trains deep neural network human activity recognizer. This model processes tabular features describing the data points. The code assumes the training data are available in file `data/train.csv`. The `--augment` option specifies that synthetic data points be added to the training data. The number of synthetic points for each class type is inversely proportional to the relative class size. This option maybe to used to address potential class imbalance.
+The `dnn_train.py` script trains deep neural network human activity recognizer. This model processes tabular features describing the data points.
+```
+python dnn_train.py --datafile <data_file> --modelfile <model_file> [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>] [--augment]
+```
 
-```
-python dnn_train.py [--augment]
-```
+The program reads training data from the given `<data_file>` and saves the trained model in Keras format to `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data.
+
+The `--augment` option specifies that synthetic data points be added to the training data. The number of synthetic points for each class type is inversely proportional to the relative class size. This option maybe to used to address potential class imbalance.
+
+-----
 
 The `dnn_test.py` script tests the deep neural network human activity recognizer. This model processes tabular features describing the data points. The code assumes the model has been trained and is available in `models/dnn_model.keras`. The code also assumes test data are available in file `data/test.csv`. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
 
