@@ -20,7 +20,7 @@ def load_unwanted_activities(file_path="unwanted_activities.csv"):
 
 def create_scaler_from_data(df, output_file=None):
    """
-   Creates standard scaler and trains on given ArWISE dataframe dataset. The standard scalar scales
+   Creates standard scaler and trains on given ArWISE dataframe dataset. The standard scaler scales
    each column independently by removing the mean and scaling to unit variance.
    If output_file given, saves scaler to file for input to all programs.
    """
