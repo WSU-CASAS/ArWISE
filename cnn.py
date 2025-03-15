@@ -32,21 +32,16 @@ from sklearn.metrics import f1_score, matthews_corrcoef
 import joblib
 import argparse
 
+from utilities import create_encoder_from_data, create_scaler_from_data
+from utilities import load_activity_mapping, load_unwanted_activities
+
 NUM_FEATURES = 8  # Number of features per time point
 WINDOW_SIZE = 100 # Consecutive time points concatenated to form features
 TEST_SIZE = 0.2   # Fractional of data used for testing
 EPOCHS = 20       # Number of training epochs for CNN
 BATCH_SIZE = 32   # Batch size for CNN training
 
-# Load a file containing mappings from the original activity labels to the activity categories being modeled
-def load_activity_mapping(file_path="utilities/activity_mapping.csv"):
-    return pd.read_csv(file_path).set_index("original")["mapped"].to_dict()
-
-# Load a file containing names of activity categories to ignore (drop)
-def load_unwanted_activities(file_path="utilities/unwanted_activities.csv"):
-    return set(pd.read_csv(file_path)["activity_label"])
-
-# Load data from files
+# Load data from files in data dir
 def load_data(data_dir):
     df = pd.DataFrame()
     data_files = sorted(os.listdir(data_dir))
@@ -66,18 +61,6 @@ def map_and_filter_data(df, activity_mapping, unwanted_activities):
     if activity_mapping:
         df["activity_label"] = df["activity_label"].replace(activity_mapping)
     return df
-
-def get_encoder_from_data(df):
-    encoder = LabelEncoder()
-    encoder.fit(df['activity_label'])
-    return encoder
-
-def get_scaler_from_data(df):
-    df = df.drop(columns=["stamp", "stamp_start", "stamp_end", "activity_label"], errors='ignore')
-    df = df.astype(np.float32).fillna(0.0)
-    scaler = StandardScaler()
-    scaler.fit(df)
-    return scaler
 
 # Build train and test data.
 def process_data(df, label_encoder, scaler):
@@ -149,9 +132,9 @@ if __name__ == "__main__":
         unwanted_activities = load_unwanted_activities(args.unwanted_activities_file)
     data_df = map_and_filter_data(data_df, activity_mapping, unwanted_activities)
     if not label_encoder:
-        label_encoder = get_encoder_from_data(data_df)
+        label_encoder = create_encoder_from_data(data_df)
     if not scaler:
-        scaler = get_scaler_from_data(data_df)
+        scaler = create_scaler_from_data(data_df)
     # Build train and test sets
     num_classes = len(label_encoder.classes_)
     X_train, X_test, y_train, y_test = process_data(data_df, label_encoder, scaler)
