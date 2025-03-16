@@ -184,14 +184,20 @@ The program reads training data from `<train.csv>`, trains the RF model, tests t
 
 ### FT-Transformer Augmented Random Forest
 
-The scripts `ft_train.py`, `ft_embed.py`, and `rf_ft.py` train and evaluate an activity recognition model based on
+The scripts `ft_train.py`, `ft_embed.py`, and `ft_rf.py` train and evaluate an activity recognition model based on
 random forest with features that are augmented using FT-Transformer embeddings.
 
-The `ft_train.py` script trains an embedding model. The code assumes tabular data are available in file `data/data.csv`.
+#### FT Train
+
+The `ft_train.py` script trains an Feature-Token (FT) transformer embedding model.
 
 ```
-python ft_train.py
+python ft_train.py --datafile <data_file> --modelfile <model_file> [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
 ```
+
+The program reads data from the given <data_file> and saves the trained FT model in Keras format to <model_file>. If scaler given, then use to scale data; otherwise, compute scaler from data. If unwanted activities given, then remove examples classified with these activities. If activity mapping given, then use to map activities in data. A sample train file is available in `data/data.csv` and a previously trained FT model is available in `models/ft_embedding_model.pkl`.
+
+#### FT Embed
 
 The `ft_embed.py` uses the embedding model to generate augmented features for training and test data.  The code assumes the tabular training and test data are available in file `data/train.csv` and `data/test.csv`. The pretrained model should be available in `models/ft_embedding_model.keras`. The code stores the augmented features in `data/ft_train.csv` and `data/ft_test.csv`.
 
@@ -199,10 +205,12 @@ The `ft_embed.py` uses the embedding model to generate augmented features for tr
 python ft_embed.py
 ```
 
-The `rf_ft.py` script script trains and evaluates a random forest activity recognition model using FT-Transformer augmented feature vectors. The code assumes the tabular training data are available in `data/ft_train.csv` and test data are available in `data/ft_test.csv`. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
+#### FT RF
+
+The `ft_rf.py` script script trains and evaluates a random forest activity recognition model using FT-Transformer augmented feature vectors. The code assumes the tabular training data are available in `data/ft_train.csv` and test data are available in `data/ft_test.csv`. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
 
 ```
-python rf_ft.py
+python ft_rf.py
 ```
 
 ### 1D CNN
