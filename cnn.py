@@ -23,9 +23,9 @@ import numpy as np
 import pandas as pd
 import os
 import tensorflow as tf
-from tensorflow import keras
-from tensorflow.keras import layers
-from tensorflow.keras.saving import save_model
+import keras
+from keras import layers
+from keras.saving import save_model
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler, LabelEncoder
 from sklearn.metrics import f1_score, matthews_corrcoef
@@ -72,17 +72,18 @@ def process_data(df, label_encoder, scaler):
 # Define the 1D CNN model structure
 def build_model(input_shape, num_classes):
     model = keras.Sequential([
-        layers.Conv1D(filters=64, kernel_size=5, activation='relu', input_shape=input_shape, dtype=tf.float32),
+        layers.Input(shape=input_shape, dtype=tf.float32),
+        layers.Conv1D(filters=64, kernel_size=5, activation='relu'),
         layers.BatchNormalization(),
-        layers.Conv1D(filters=128, kernel_size=5, activation='relu', dtype=tf.float32),
+        layers.Conv1D(filters=128, kernel_size=5, activation='relu'),
         layers.BatchNormalization(),
-        layers.MaxPooling1D(pool_size=2, dtype=tf.float32),
-        layers.Conv1D(filters=256, kernel_size=5, activation='relu', dtype=tf.float32),
-        layers.BatchNormalization(dtype=tf.float32),
-        layers.GlobalAveragePooling1D(dtype=tf.float32),
-        layers.Dense(128, activation='relu', dtype=tf.float32),
+        layers.MaxPooling1D(pool_size=2),
+        layers.Conv1D(filters=256, kernel_size=5, activation='relu'),
+        layers.BatchNormalization(),
+        layers.GlobalAveragePooling1D(),
+        layers.Dense(128, activation='relu'),
         layers.Dropout(0.5),
-        layers.Dense(num_classes, activation='softmax', dtype=tf.float32)
+        layers.Dense(num_classes, activation='softmax')
     ])
     model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
     return model
