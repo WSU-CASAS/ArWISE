@@ -32,9 +32,6 @@ from utilities import load_activity_mapping, load_unwanted_activities, map_and_f
 EPOCHS = 20     # Number of training epochs
 BATCH_SIZE = 64 # Batch size for training
 
-# Uncomment for debugging
-#os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
-
 def process_data(df, label_encoder, scaler):
     y = df["activity_label"].values
     y_encoded = label_encoder.transform(y)

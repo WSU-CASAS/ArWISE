@@ -35,9 +35,6 @@ EPOCHS = 20 # Number of training epochs
 BATCH_SIZE = 64 # Batch size for training
 VALIDATION_SPLIT = 0.2 # Fraction of data to use for validation during training
 
-# Uncomment for debugging
-#os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
-
 def process_data(df, label_encoder, scaler):
     X = df.drop(columns=["stamp", "activity_label"], errors="ignore").fillna(0.0).astype(np.float32)
     y = df["activity_label"].values

@@ -16,7 +16,6 @@ If activity mapping given, then use to map activities in data.
 If --augment given, then the the data is augmented to improve model robustness.
 """
 
-import os
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -41,10 +40,6 @@ PERMUTE_FEATURES = [
 EPOCHS = 20       # Number of training epochs
 BATCH_SIZE = 32   # Batch size for training
 VALIDATION_SPLIT = 0.2 # Fraction of data to use for validation during training
-
-# Uncomment these for debugging
-#os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
-#os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
 def process_data(df, label_encoder, scaler, augment):
     X = df.drop(columns=["stamp", "activity_label"], errors="ignore")
