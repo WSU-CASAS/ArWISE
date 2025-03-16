@@ -174,7 +174,13 @@ While the label encoder and scaler can be computed from the data and the optiona
 
 ### Random Forest
 
-The `random_forest.py` script trains and evaluates a random forest activity recognition model. The code assumes the tabular training data are available in `data/train.csv` and test data are available in `data/test.csv`. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
+The `random_forest.py` script trains and evaluates a random forest activity recognition model. This script processes the data using the trained model and reports performance on the test data in terms of accuracy, f1 score, mcc, and top-3 accuracy.
+
+```
+python random_forest.py --train <train.csv> --test <test.csv> --modelfile <model_file>
+```
+
+The program reads training data from `<train.csv>`, trains the RF model, tests the model on data read from `<test.csv>`, and saves the model to `<model_file>` in PKL format. A sample train file is available in `data/train.csv` and a sample test file is available in `data/test.csv`. A previously trained RF AR model is available in `models/rf_ar_model.pkl`.
 
 ### FT-Transformer Augmented Random Forest
 
