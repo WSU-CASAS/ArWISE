@@ -11,6 +11,7 @@ Keras format to <model_file>.
 If scaler given, then use to scale data; otherwise, compute scaler from data.
 """
 
+import os
 import numpy as np
 import pandas as pd
 import tensorflow as tf
@@ -24,7 +25,7 @@ from keras.saving import save_model
 from utilities import create_scaler_from_data
 
 # Suppress TensorFlow logs
-#os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
+os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
 
 EPOCHS = 10 # Number of training epochs
 BATCH_SIZE = 32 # Batch size for training
@@ -82,4 +83,3 @@ if __name__ == "__main__":
     # Train autoencoder
     autoencoder = pretrain_autoencoder(df, scaler)
     save_model(autoencoder, args.model_file)
-    
