@@ -1,9 +1,9 @@
 """
-cl_pretrain.py --datafile <data_file> --modelfile <model_file> --pretrain <pretrain_model_file>
+cl_train.py --datafile <data_file> --modelfile <model_file> --pretrain <pretrain_model_file>
             [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>]
             [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
 
-Supervised contrastive pretraining activity recognition. TThis code trains a deep network
+Supervised contrastive pretraining activity recognition. This code trains a deep network
 activity recognizer based on a pretrained model. This is the second of three steps that
 are: 1) pretrain (cl_pretrain.py), 2) train activity classifier (cl_train.py), 
 and 3) evaluate the classifier (cl_test.py).
