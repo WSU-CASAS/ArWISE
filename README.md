@@ -131,7 +131,7 @@ The `cl_test.py` script tests an activity classification model that was trained 
 python cl_test.py --datafile <data_file> --modelfile <model_file> [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
 ```
 
-The program reads training data from the given `<data_file>` and a pretrained AR model in Keras format from `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data. A sample data file is available in `data/test.csv`, and a previously pretrained contrastive AR model is available in `models/contrastive_ar_model.keras`.
+The program reads training data from the given `<data_file>` and a trained AR model in Keras format from `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data. A sample data file is available in `data/test.csv`, and a previously pretrained contrastive AR model is available in `models/contrastive_ar_model.keras`.
 
 While the label encoder and scaler can be computed from the data and the optional activity mapping and unwanted activities, the best approach is to generate an encoder and scaler using the `create_encoder.py` and `create_scaler.py` scripts and use the same encoder and scaler for `cl_pretrain.py`, `cl_train.py` and `cl_test.py`.
 
@@ -162,11 +162,15 @@ The program reads training data from the given `<data_file>`, reads the pretrain
 
 #### MAE Test
 
-The `mae_test.py` script tests an activity classification model that was trained using a deep neural network and a MAE pretrained model. The code assumes the tabular test data are available in file `data/test.csv` and the trained model is available in `models/mae_ar_model.keras`. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
+The `mae_test.py` script tests an activity classification model that was trained using a deep neural network and a MAE pretrained model. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
 
 ```
-python mae_test.py
+python mae_test.py --datafile <data_file> --modelfile <model_file> [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
 ```
+
+The program reads training data from the given `<data_file>` and a trained AR model in Keras format from `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data. A sample data file is available in `data/test.csv`, and a previously trained MAE AR model is available in `models/mae_ar_model.keras`.
+
+While the label encoder and scaler can be computed from the data and the optional activity mapping and unwanted activities, the best approach is to generate an encoder and scaler using the `create_encoder.py` and `create_scaler.py` scripts and use the same encoder and scaler for `mae_pretrain.py`, `mae_train.py` and `mae_test.py`.
 
 ### Random Forest
 
