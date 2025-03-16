@@ -184,8 +184,7 @@ The program reads training data from `<train.csv>`, trains the RF model, tests t
 
 ### FT-Transformer Augmented Random Forest
 
-The scripts `ft_train.py`, `ft_embed.py`, and `ft_rf.py` train and evaluate an activity recognition model based on
-random forest with features that are augmented using FT-Transformer embeddings.
+The scripts `ft_train.py` and `ft_embed.py` generate augmented training and testing datasets with features that are augmented using FT-Transformer embeddings. The resulting datasets can be input to the `random_forest.py` script.
 
 #### FT Train
 
@@ -207,15 +206,7 @@ python ft_embed.py --train <train.csv> --test <test.csv> --pretrain <pretrain_mo
 
 The program reads in training `<train.csv>` and testing `<test.csv>` data, and a pretrained embedding model built using `ft_train.py`. The data is rewritten to `<train_ft.csv>` and `<test_ft.csv>` with the embedding features added. If scaler given, then use to scale data; otherwise, compute scaler from data. If unwanted activities given, then remove examples classified with these activities. If activity mapping given, then use to map activities in data.
 
-A sample training data file is available in `data/train.csv` and a sample testing data file is in `data/test.csv`. A previously trained FT model is available in `models/ft_embedding_model.keras`. Sample output files are available in `data/train_ft.csv` and `data/test_ft.csv`.
-
-#### FT RF
-
-The `ft_rf.py` script script trains and evaluates a random forest activity recognition model using FT-Transformer augmented feature vectors. The code assumes the tabular training data are available in `data/ft_train.csv` and test data are available in `data/ft_test.csv`. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
-
-```
-python ft_rf.py
-```
+A sample training data file is available in `data/train.csv` and a sample testing data file is in `data/test.csv`. A previously trained FT model is available in `models/ft_embedding_model.keras`. Sample output files are available in `data/train_ft.csv` and `data/test_ft.csv`. These datasets can be input to the `random_forest.py` script for evaluation.
 
 ### 1D CNN
 

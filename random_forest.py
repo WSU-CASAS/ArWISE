@@ -19,8 +19,8 @@ np.set_printoptions(threshold=np.inf, suppress=True)
 def load_data(train_data, test_data):
     y_train = train_data["activity_label"]
     y_test = test_data["activity_label"]
-    X_train = train_data.drop(columns=["stamp", "activity_label"])
-    X_test = test_data.drop(columns=["stamp", "activity_label"])
+    X_train = train_data.drop(columns=["stamp", "activity_label"], errors='ignore')
+    X_test = test_data.drop(columns=["stamp", "activity_label"], errors='ignore')
     return X_train, y_train, X_test, y_test
 
 def learn_rf(X_train, y_train, X_test, y_test):
@@ -44,7 +44,7 @@ def learn_rf(X_train, y_train, X_test, y_test):
     is_correct = np.any(top_3_classes == y_test[:, None], axis=1)
     top_3_result = np.sum(is_correct)
     top_3_accuracy = top_3_result / len(y_test)
-    print('Top-3 Correct:', top_3_result, ', Total:', len(y_test), ', Top-3 Accuracy:', top_3_accuracy)
+    print(f'Top-3 Correct: {top_3_result}, Total: {len(y_test)}, Top-3 Accuracy: {top_3_accuracy}')
     return clf
 
 def parse_arguments():
