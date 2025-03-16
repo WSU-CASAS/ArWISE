@@ -195,15 +195,19 @@ The `ft_train.py` script trains an Feature-Token (FT) transformer embedding mode
 python ft_train.py --datafile <data_file> --modelfile <model_file> [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
 ```
 
-The program reads data from the given <data_file> and saves the trained FT model in Keras format to <model_file>. If scaler given, then use to scale data; otherwise, compute scaler from data. If unwanted activities given, then remove examples classified with these activities. If activity mapping given, then use to map activities in data. A sample train file is available in `data/data.csv` and a previously trained FT model is available in `models/ft_embedding_model.pkl`.
+The program reads data from the given <data_file> and saves the trained FT model in Keras format to <model_file>. If scaler given, then use to scale data; otherwise, compute scaler from data. If unwanted activities given, then remove examples classified with these activities. If activity mapping given, then use to map activities in data. A sample train file is available in `data/data.csv` and a previously trained FT model is available in `models/ft_embedding_model.keras`.
 
 #### FT Embed
 
-The `ft_embed.py` uses the embedding model to generate augmented features for training and test data.  The code assumes the tabular training and test data are available in file `data/train.csv` and `data/test.csv`. The pretrained model should be available in `models/ft_embedding_model.keras`. The code stores the augmented features in `data/ft_train.csv` and `data/ft_test.csv`.
+The `ft_embed.py` script uses the embedding model to generate augmented features for training and test data.  
 
 ```
-python ft_embed.py
+python ft_embed.py --train <train.csv> --test <test.csv> --pretrain <pretrain_model_file> [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
 ```
+
+The program reads in training `<train.csv>` and testing `<test.csv>` data, and a pretrained embedding model built using `ft_train.py`. The data is rewritten to `<train_ft.csv>` and `<test_ft.csv>` with the embedding features added. If scaler given, then use to scale data; otherwise, compute scaler from data. If unwanted activities given, then remove examples classified with these activities. If activity mapping given, then use to map activities in data.
+
+A sample training data file is available in `data/train.csv` and a sample testing data file is in `data/test.csv`. A previously trained FT model is available in `models/ft_embedding_model.keras`. Sample output files are available in `data/train_ft.csv` and `data/test_ft.csv`.
 
 #### FT RF
 
