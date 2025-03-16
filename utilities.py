@@ -55,7 +55,6 @@ def create_encoder_from_mapping(activity_mapping, unwanted_activities=None, outp
    excluding any activities in the unwanted_activities set.
    If output_file given, save encoder to file for input to all programs.
    """
-   activity_mapping = pd.read_csv(act_map_file).set_index("original")["mapped"].to_dict()
    label_encoder = LabelEncoder()
    activities = np.unique(list(activity_mapping.values()))
    if unwanted_activities:
