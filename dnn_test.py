@@ -20,7 +20,7 @@ import pandas as pd
 import joblib
 import tensorflow as tf
 from sklearn.metrics import confusion_matrix, f1_score, matthews_corrcoef
-from tensorflow.keras.saving import load_model
+from keras.saving import load_model
 
 from utilities import create_encoder_from_data, create_scaler_from_data
 from utilities import load_activity_mapping, load_unwanted_activities, map_and_filter_data
