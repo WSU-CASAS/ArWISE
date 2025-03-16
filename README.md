@@ -133,7 +133,7 @@ python cl_test.py --datafile <data_file> --modelfile <model_file> [--encoder <la
 
 The program reads training data from the given `<data_file>` and a pretrained AR model in Keras format from `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data. A sample data file is available in `data/test.csv`, and a previously pretrained contrastive AR model is available in `models/contrastive_ar_model.keras`.
 
-While the label encoder and scaler can be computed from the data and the optional activity mapping and unwanted activities, the best approach is to generate an encoder and scaler using the `create_encoder.py` and `create_scaler.py` scripts and use the same encoder and scaler for both `cl_pretrain.py`, `cl_train.py` and `cl_test.py`.
+While the label encoder and scaler can be computed from the data and the optional activity mapping and unwanted activities, the best approach is to generate an encoder and scaler using the `create_encoder.py` and `create_scaler.py` scripts and use the same encoder and scaler for `cl_pretrain.py`, `cl_train.py` and `cl_test.py`.
 
 ### DNN with Masked Autoencoder Pretraining
 
