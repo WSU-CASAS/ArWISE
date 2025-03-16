@@ -78,7 +78,7 @@ Pretrained models for each of the following model types are available in the `mo
 
 ### DNN
 
-#### Train
+#### DNN Train
 
 The `dnn_train.py` script trains deep neural network human activity recognizer. This model processes tabular features describing the data points.
 ```
@@ -89,7 +89,7 @@ The program reads training data from the given `<data_file>` and saves the train
 
 The `--augment` option specifies that synthetic data points be added to the training data. The number of synthetic points for each class type is inversely proportional to the relative class size. This option maybe to used to address potential class imbalance.
 
-#### Test
+#### DNN Test
 
 The `dnn_test.py` script tests the deep neural network human activity recognizer given in `<model_file>` on data given in `<data_file>`. A previously pretrained DNN model is available in file `models/dnn_model.keras`. A sample test dataset is available in file `data/test.csv`. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
 
@@ -99,11 +99,11 @@ python dnn_test.py --datafile <data_file> --modelfile <model_file> [--encoder <l
 
 While the label encoder and scaler can be computed from the data and the optional activity mapping and unwanted activities, the best approach is to generate an encoder and scaler using the `create_encoder.py` and `create_scaler.py` scripts and use the same encoder and scaler for both `dnn_train.py` and `dnn_test.py`.
 
-### DNN with Contrastive Pretraining
+### DNN with Contrastive Learning (CL) Pretraining
 
 The scripts `cl_pretrain.py`, `cl_train.py`, and `cl_test.py` train and evaluate a deep network for activity recognition that is boosted by contrastive pretraining.
 
-#### Pretrain
+#### CL Pretrain
 
 The `cl_pretrain.py` script pretrains an embedding model. The model is trained to keep points from the same class close together and points from different classes farther apart. 
 
@@ -113,7 +113,7 @@ python cl_pretrain.py --datafile <data_file> --modelfile <model_file> [--encoder
 
 The program reads training data from the given `<data_file>` and saves the trained model in Keras format to `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data. A sample data file is available in `data/train.csv`, and a previously pretrained model is available in `models/contrastive_pretrained.keras`.
 
-#### Train
+#### CL Train
 
 The `cl_train.py` script trains an activity classification model using the pretrained contrastive model embedder. 
 
@@ -123,7 +123,7 @@ python cl_train.py --datafile <data_file> --modelfile <model_file> --pretrain <p
 
 The program reads training data from the given `<data_file>`, reads the pretrained model from `<pretrain_model_file>`, and saves the trained model in Keras format to `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data. A sample data file is available in `data/train.csv`, and a previously pretrained model is available in `models/contrastive_pretrained.keras`. A previously trained contrastive AR model is available in `models/contrastive_ar_model.keras`.
 
-#### Test
+#### CL Test
 
 The `cl_test.py` script tests an activity classification model that was trained using a deep neural network and a contrastive pretrained model. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
 
@@ -135,22 +135,30 @@ The program reads training data from the given `<data_file>` and a pretrained AR
 
 While the label encoder and scaler can be computed from the data and the optional activity mapping and unwanted activities, the best approach is to generate an encoder and scaler using the `create_encoder.py` and `create_scaler.py` scripts and use the same encoder and scaler for `cl_pretrain.py`, `cl_train.py` and `cl_test.py`.
 
-### DNN with Masked Autoencoder Pretraining
+### DNN with Masked Autoencoder (MAE) Pretraining
 
 The scripts `mae_pretrain.py`, `mae_train.py`, and `mae_test.py` train and evaluate a deep network for activity recognition
 that is boosted by contrastive pretraining.
 
+#### MAE Pretrain
+
 The `mae_pretrain.py` script pretrains an embedding model. The code assumes the tabular training data are available in file `data/data.csv`.  The model is trained to reconstruct points using a masked autoencoder and learning a representation for the data.
 
 ```
-python mae_pretrain.py
+python mae_pretrain.py --datafile <data_file> --modelfile <model_file> [--scaler <scaler.pkl>]
 ```
 
-The `mae_train.py` script trains an activity classification model using the MAE pretrained model. The code assumes the tabular training data are available in file `data/train.csv` and the pretrained model is available in `models/mae_pretrained.keras`.  The trained model is stored in `models/mae_ar_model.keras`.
+The program reads data from the given `<data_file>` and saves the pretrained MAE model in Keras format to `<model_file>`. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. A sample data file is available in `data/train.csv`, and a previously pretrained model is available in `models/mae_pretrained.keras`.
+
+#### MAE Train
+
+The `mae_train.py` script trains an activity classification model using the MAE pretrained model.
 
 ```
-python mae_train.py
+python mae_train.py 
 ```
+
+#### MAE Test
 
 The `mae_test.py` script tests an activity classification model that was trained using a deep neural network and a MAE pretrained model. The code assumes the tabular test data are available in file `data/test.csv` and the trained model is available in `models/mae_ar_model.keras`. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
 
