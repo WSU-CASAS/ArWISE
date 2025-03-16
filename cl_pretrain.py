@@ -16,16 +16,15 @@ If unwanted activities given, then remove examples classified with these activit
 If activity mapping given, then use to map activities in data.
 """
 
-import os
 import numpy as np
 import pandas as pd
 import tensorflow as tf
 import joblib
 import argparse
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, Dropout, Input, Layer
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.saving import save_model, register_keras_serializable
+from keras.models import Model
+from keras.layers import Dense, Dropout, Input, Layer
+from keras.optimizers import Adam
+from keras.saving import save_model, register_keras_serializable
 
 from utilities import create_encoder_from_data, create_scaler_from_data
 from utilities import load_activity_mapping, load_unwanted_activities, map_and_filter_data

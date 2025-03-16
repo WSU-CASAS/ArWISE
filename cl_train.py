@@ -22,11 +22,11 @@ import pandas as pd
 import tensorflow as tf
 import joblib
 import argparse
-from tensorflow.keras.models import Model
-from tensorflow.keras.layers import Dense, Dropout, Layer
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.saving import load_model, save_model, register_keras_serializable
-from tensorflow.keras.callbacks import EarlyStopping
+from keras.models import Model
+from keras.layers import Dense, Dropout, Layer
+from keras.optimizers import Adam
+from keras.saving import load_model, save_model, register_keras_serializable
+from keras.callbacks import EarlyStopping
 
 from utilities import create_encoder_from_data, create_scaler_from_data
 from utilities import load_activity_mapping, load_unwanted_activities, map_and_filter_data
