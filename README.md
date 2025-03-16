@@ -155,8 +155,10 @@ The program reads data from the given `<data_file>` and saves the pretrained MAE
 The `mae_train.py` script trains an activity classification model using the MAE pretrained model.
 
 ```
-python mae_train.py 
+python mae_train.py --datafile <data_file> --modelfile <model_file> --pretrain <pretrain_model_file> [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
 ```
+
+The program reads training data from the given `<data_file>`, reads the pretrained model from `<pretrain_model_file>`, and saves the trained model in Keras format to `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data. A sample data file is available in `data/train.csv`, and a previously pretrained model is available in `models/contrastive_pretrained.keras`. A previously trained MAE AR model is available in `models/mae_ar_model.keras`.
 
 #### MAE Test
 
