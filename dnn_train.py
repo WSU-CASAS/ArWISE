@@ -1,19 +1,19 @@
 """
-    dnn_train.py --datafile <data_file> --modelfile <model_file>
-            [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>]
-            [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
-            [--augment]
+dnn_train.py --datafile <data_file> --modelfile <model_file>
+        [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>]
+        [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
+        [--augment]
 
-    Activity recognition with DNN and data augmentation to address class imbalance.
-    The program reads data from the given <data_file> and saves the trained model in
-    Keras format to <model_file>. The script dnn_test.py can then be used to evaluate
-    the model on test data.
+Activity recognition with DNN and data augmentation to address class imbalance.
+The program reads data from the given <data_file> and saves the trained model in
+Keras format to <model_file>. The script dnn_test.py can then be used to evaluate
+the model on test data.
 
-    If encoder given, then use to encode activity labels; otherwise, compute encoder from data.
-    If scaler given, then use to scale data; otherwise, compute scaler from data.
-    If unwanted activities given, then remove examples classified with these activities.
-    If activity mapping given, then use to map activities in data.
-    If --augment given, then the the data is augmented to improve model robustness.
+If encoder given, then use to encode activity labels; otherwise, compute encoder from data.
+If scaler given, then use to scale data; otherwise, compute scaler from data.
+If unwanted activities given, then remove examples classified with these activities.
+If activity mapping given, then use to map activities in data.
+If --augment given, then the the data is augmented to improve model robustness.
 """
 
 import os
@@ -38,8 +38,8 @@ PERMUTE_FEATURES = [
     'rotation_rate_x_mean', 'rotation_rate_y_mean', 'rotation_rate_z_mean',
     'user_acceleration_x_mean', 'user_acceleration_y_mean', 'user_acceleration_z_mean']
 
-EPOCHS = 20       # Number of training epochs for CNN
-BATCH_SIZE = 32   # Batch size for CNN training
+EPOCHS = 20       # Number of training epochs
+BATCH_SIZE = 32   # Batch size for training
 VALIDATION_SPLIT = 0.2 # Fraction of data to use for validation during training
 
 # Uncomment these for debugging

@@ -78,7 +78,7 @@ Pretrained models for each of the following model types are available in the `mo
 
 ### DNN
 
-#### DNN Training
+#### Train
 
 The `dnn_train.py` script trains deep neural network human activity recognizer. This model processes tabular features describing the data points.
 ```
@@ -89,7 +89,7 @@ The program reads training data from the given `<data_file>` and saves the train
 
 The `--augment` option specifies that synthetic data points be added to the training data. The number of synthetic points for each class type is inversely proportional to the relative class size. This option maybe to used to address potential class imbalance.
 
-#### DNN Testing
+#### Test
 
 The `dnn_test.py` script tests the deep neural network human activity recognizer given in `<model_file>` on data given in `<data_file>`. A previously pretrained DNN model is available in file `models/dnn_model.keras`. A sample test dataset is available in file `data/test.csv`. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
 
@@ -97,30 +97,43 @@ The `dnn_test.py` script tests the deep neural network human activity recognizer
 python dnn_test.py --datafile <data_file> --modelfile <model_file> [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
 ```
 
-While the label encoded and scaler can be computed from the data and the optional activity mapping and unwanted activities, the best approach is to generate an encoder and scaler using the `create_encoder.py` and `create_scaler.py` scripts and use the same encoder and scaler for both `dnn_train.py` and `dnn_test.py`.
+While the label encoder and scaler can be computed from the data and the optional activity mapping and unwanted activities, the best approach is to generate an encoder and scaler using the `create_encoder.py` and `create_scaler.py` scripts and use the same encoder and scaler for both `dnn_train.py` and `dnn_test.py`.
 
 ### DNN with Contrastive Pretraining
 
-The scripts `cl_pretrain.py`, `cl_train.py`, and `cl_test.py` train and evaluate a deep network for activity recognition
-that is boosted by contrastive pretraining.
+The scripts `cl_pretrain.py`, `cl_train.py`, and `cl_test.py` train and evaluate a deep network for activity recognition that is boosted by contrastive pretraining.
 
-The `cl_pretrain.py` script pretrains an embedding model. The code assumes the tabular training data are available in file `data/train.csv`.  The model is trained to keep points from the same class close together and points from different classes farther apart.
+#### Pretrain
 
-```
-python cl_pretrain.py
-```
-
-The `cl_train.py` script trains an activity classification model using the pretrained contrastive embedder. The code assumes the tabular training data are available in file `data/train.csv` and the pretrained model is available in `models/contrastive_pretrained.keras`.  The trained model is stored in `models/contrastive_ar_model.keras`.
+The `cl_pretrain.py` script pretrains an embedding model. The model is trained to keep points from the same class close together and points from different classes farther apart. 
 
 ```
-python cl_train.py
+python cl_pretrain.py --datafile <data_file> --modelfile <model_file> [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
 ```
 
-The `cl_test.py` script tests an activity classification model that was trained using a deep neural network and a contrastive pretrained model. The code assumes the tabular test data are available in file `data/test.csv` and the trained model is available in `models/contrastive_ar_model.keras`. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
+The program reads training data from the given `<data_file>` and saves the trained model in Keras format to `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data. A sample data file is available in `data/train.csv`, and a previously pretrained model is available in `models/contrastive_pretrained.keras`.
+
+#### Train
+
+The `cl_train.py` script trains an activity classification model using the pretrained contrastive model embedder. 
 
 ```
-python cl_test.py
+python cl_train.py --datafile <data_file> --modelfile <model_file> --pretrain <pretrain_model_file> [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
 ```
+
+The program reads training data from the given `<data_file>`, reads the pretrained model from `<pretrain_model_file>`, and saves the trained model in Keras format to `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data. A sample data file is available in `data/train.csv`, and a previously pretrained model is available in `models/contrastive_pretrained.keras`. A previously trained contrastive AR model is available in `models/contrastive_ar_model.keras`.
+
+#### Test
+
+The `cl_test.py` script tests an activity classification model that was trained using a deep neural network and a contrastive pretrained model. This script processes the data using the trained model and reports performance in terms of accuracy, f1 score, mcc, and top-3 accuracy.
+
+```
+python cl_test.py --datafile <data_file> --modelfile <model_file> [--encoder <label_encoder.pkl>] [--scaler <scaler.pkl>] [--mapping <activity_mapping.csv>] [--unwanted <unwanted_activities.csv>]
+```
+
+The program reads training data from the given `<data_file>` and a pretrained AR model in Keras format from `<model_file>`. If encoder PKL file given, then use to encode activity labels; otherwise, compute encoder from data. If scaler PKL file given, then use to scale data; otherwise, compute scaler from data. If unwanted activities CSV file given, then remove examples classified with these activities. If activity mapping CSV file given, then use to map activities in data. A sample data file is available in `data/test.csv`, and a previously pretrained contrastive AR model is available in `models/contrastive_ar_model.keras`.
+
+While the label encoder and scaler can be computed from the data and the optional activity mapping and unwanted activities, the best approach is to generate an encoder and scaler using the `create_encoder.py` and `create_scaler.py` scripts and use the same encoder and scaler for both `cl_pretrain.py`, `cl_train.py` and `cl_test.py`.
 
 ### DNN with Masked Autoencoder Pretraining
 
